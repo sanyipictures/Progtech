@@ -1,0 +1,6 @@
+.button {
+    -fx-font-weight: bold;
+}
+#gold{
+    -fx-graphic: url("../pictures/spades2.png");
+}

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" minHeight="600.0" minWidth="800.0" prefHeight="200" prefWidth="320" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.poker.MainFXMLController">
+   <children>
+      <Button fx:id="playerCard5" layoutX="459.0" layoutY="326.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" onAction="#cardClickedAction" rotate="30.0" />
+      <Button fx:id="aiCard5" layoutX="469.0" layoutY="60.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="70.0" rotate="-30.0" />
+      <Button fx:id="playerCard4" layoutX="412.0" layoutY="300.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" onAction="#cardClickedAction" rotate="15.0" />
+      <Button fx:id="playerCard3" layoutX="365.0" layoutY="289.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" onAction="#cardClickedAction" />
+      <Button fx:id="playerCard2" layoutX="311.0" layoutY="300.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" onAction="#cardClickedAction" rotate="-15.0" />
+      <Button fx:id="playerCard1" layoutX="264.0" layoutY="326.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" onAction="#cardClickedAction" rotate="-30.0" />
+      <Button fx:id="aiCard4" layoutX="422.0" layoutY="85.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" rotate="-15.0" />
+      <Button fx:id="aiCard3" layoutX="365.0" layoutY="96.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" />
+      <Button fx:id="aiCard2" layoutX="311.0" layoutY="85.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" rotate="15.0" />
+      <Button fx:id="aiCard1" layoutX="264.0" layoutY="60.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" rotate="30.0" />
+      <Button fx:id="startButton" layoutX="243.0" layoutY="119.0" minHeight="300.0" minWidth="300.0" mnemonicParsing="false" onAction="#startButtonAction" text="START" textAlignment="CENTER">
+         <font>
+            <Font size="72.0" />
+         </font>
+      </Button>
+      <ImageView fx:id="gold" fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../Desktop/10-1489127800-gold.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="playerCredit" layoutX="31.0" layoutY="452.0" text="Label">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Button fx:id="throwButton" layoutX="31.0" layoutY="525.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#throwButtonAction" text="THROW" />
+      <Button fx:id="changeButton" layoutX="639.0" layoutY="525.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#changeButtonAction" text="CHANGE" />
+      <Button fx:id="betButton" layoutX="249.0" layoutY="538.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#betButtonAction" text="BET" />
+      <Button fx:id="checkButton" layoutX="454.0" layoutY="538.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#checkButtonAction" text="CHECK" />
+      <TextField fx:id="betTextField" layoutX="300.0" layoutY="477.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <Label layoutX="192.0" layoutY="476.0" text="Your Bet:">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Button fx:id="increaseBetButton" layoutX="504.0" layoutY="466.0" mnemonicParsing="false" onAction="#increaseBetButtonAction" rotate="-90.0" text="&gt;" translateY="5.0">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
+      <Button fx:id="decreseBetButton" layoutX="504.0" layoutY="490.0" mnemonicParsing="false" onAction="#decreseBetButtonAction" rotate="-90.0" text="&lt;" translateY="5.0">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="589.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../Desktop/10-1489127800-gold.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="aiCredit" layoutX="622.0" layoutY="196.0" text="Label">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label fx:id="aiBet" alignment="CENTER" layoutX="353.0" layoutY="20.0" text="Label" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <Label fx:id="playerBet" layoutX="353.0" layoutY="423.0" text="Label" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="textArea" layoutX="8.0" layoutY="10.0" prefHeight="260.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>
