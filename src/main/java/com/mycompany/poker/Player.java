@@ -139,9 +139,11 @@ public class Player {
      * Sets all cards' selected status to false.
      */
     public void setAllSelectedCards(){
-        for(boolean t : this.selectedCards){
-            t = false;
-        }
+        this.selectedCards[0] = false;
+        this.selectedCards[1] = false;
+        this.selectedCards[2] = false;
+        this.selectedCards[3] = false;
+        this.selectedCards[4] = false;
     }
     /**
      * Increments the player's credit with a specified amount of credit.

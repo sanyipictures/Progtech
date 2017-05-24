@@ -19,6 +19,7 @@ public class AI {
         this.strength = -1;
         this.winnerCalc = new WinnerCalculator();
         this.random = new Random();
+        LOGGER.setLevel(Level.FINE);
     }
     /**
      * Decides the necessary steps in the AI's turn.

@@ -1,15 +1,20 @@
 package com.mycompany.poker;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -19,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
+import javafx.stage.Stage;
 
 public class MainFXMLController implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(MainFXMLController.class.getName());
@@ -55,9 +61,6 @@ public class MainFXMLController implements Initializable {
     private TextField betTextField;
     
     @FXML
-    private Button startButton;
-    
-    @FXML
     private Button throwButton;
     @FXML
     private Button checkButton;
@@ -91,34 +94,6 @@ public class MainFXMLController implements Initializable {
     private Button aiCard4;
     @FXML
     private Button aiCard5;
-    
-    @FXML
-    private void startButtonAction(ActionEvent event){
-        this.playerArray[0] = new Player();
-        this.playerArray[1] = new Player();
-        
-        this.cardPicturesArray[0][0] = this.playerCard1;
-        this.cardPicturesArray[0][1] = this.playerCard2;
-        this.cardPicturesArray[0][2] = this.playerCard3;
-        this.cardPicturesArray[0][3] = this.playerCard4;
-        this.cardPicturesArray[0][4] = this.playerCard5;
-        
-        this.cardPicturesArray[1][0] = this.aiCard1;
-        this.cardPicturesArray[1][1] = this.aiCard2;
-        this.cardPicturesArray[1][2] = this.aiCard3;
-        this.cardPicturesArray[1][3] = this.aiCard4;
-        this.cardPicturesArray[1][4] = this.aiCard5;
-        
-        this.dealer.deal(playerArray);
-        
-        this.setCardPictures();
-        
-        this.displayInterface();
-        
-        this.startButton.setVisible(false);
-        
-        this.textArea.appendText("\nPlese make your bet!");
-    }
 
     @FXML
     private void cardClickedAction(ActionEvent event){
@@ -242,12 +217,17 @@ public class MainFXMLController implements Initializable {
     
     @FXML
     private void checkButtonAction(ActionEvent event){
-    
+        if(this.playerArray[0].getBet() == 0){
+            this.textArea.appendText("\nYou can not check without any bet!");
+            return;
+        }
+        
         if(this.playerArray[0].getBet() == this.playerArray[1].getBet()){
             LOGGER.log(Level.INFO, "Player has checked!");
             this.textArea.appendText("\n\nYou have checked!");
             this.endTurn();
-        }else{
+        }else 
+            if(this.playerArray[0].getCredit() > 0){
             LOGGER.log(Level.INFO, "Player can not check!");
             this.textArea.appendText("\n\nYou can not check, becouse the bets are not equal!");
         }
@@ -258,6 +238,10 @@ public class MainFXMLController implements Initializable {
         if(!this.gameMaster.getPlayerChangedCard()){
             boolean[] selectedCards = this.playerArray[0].getSelectedCards();
 
+            if(!selectedCards[0] && !selectedCards[1] && !selectedCards[2] && !selectedCards[3] && !selectedCards[4]){
+                this.textArea.appendText("\nYou have tried to changed cards,\n without selecting one!");
+                return;
+            }
             for(int i = 0; i < 5; ++i){
 
                 if(selectedCards[i]){
@@ -299,6 +283,147 @@ public class MainFXMLController implements Initializable {
                 ));
             }else
                 this.betTextField.setText("0");
+    }
+
+    private void endTurn(){
+        String calculatedHandString = this.gameMaster.getCalculatedStrengthAsString(this.playerArray[0].getHand());
+        
+        if(this.gameMaster.getFlopped(1) == true){
+            this.playerArray[1].incrementCredit(this.playerArray[0].getBet() + this.playerArray[1].getBet());
+            this.gameMaster.insertData(0, calculatedHandString , this.playerArray[0].getBet() + this.playerArray[1].getBet());
+            
+            this.newTurn();
+            return;
+        }
+        if(this.gameMaster.getFlopped(2) == true){
+            this.playerArray[0].incrementCredit(this.playerArray[0].getBet() + this.playerArray[1].getBet());
+            this.gameMaster.insertData(1, calculatedHandString, this.playerArray[0].getBet() + this.playerArray[1].getBet());
+            
+            this.newTurn();
+            return;
+        }
+        
+        int winner = this.gameMaster.getWinner(this.playerArray[0].getHand(), this.playerArray[1].getHand());
+        
+        switch(winner){
+        
+            case 1:
+                if(this.playerArray[1].getCredit()<=0){
+                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
+                    this.gameMaster.insertData(1, calculatedHandString, this.playerArray[0].getBet() + this.playerArray[1].getBet());
+                    
+                    this.victory();
+                    return;
+                }
+                if(this.playerArray[0].getBet() < this.gameMaster.getMaxBet()){
+                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet()*2);
+                    this.playerArray[1].incrementCredit(this.gameMaster.getMaxBet() - this.playerArray[0].getBet());
+                    this.gameMaster.insertData(1, calculatedHandString, this.playerArray[0].getBet()*2);
+                    
+                    this.newTurn();
+                    return;
+                }else{
+                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
+                    this.gameMaster.insertData(1, calculatedHandString, this.playerArray[0].getBet() + this.playerArray[1].getBet());
+                    
+                    this.newTurn();
+                    return;
+                }
+            case 2:
+                if(this.playerArray[0].getCredit()<=0){
+                    this.playerArray[1].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
+                    this.gameMaster.insertData(0, calculatedHandString, this.playerArray[0].getBet() + this.playerArray[1].getBet());
+                    this.defeat();
+                    return;
+                }
+                if(this.playerArray[1].getBet() < this.gameMaster.getMaxBet()){
+                    this.playerArray[1].incrementCredit(this.playerArray[1].getBet()*2);
+                    this.playerArray[0].incrementCredit(this.gameMaster.getMaxBet() - this.playerArray[1].getBet());
+                    this.gameMaster.insertData(0, calculatedHandString, this.playerArray[1].getBet()*2);
+                    
+                    this.newTurn();
+                    return;
+                }else{
+                    this.playerArray[1].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
+                    this.gameMaster.insertData(0, calculatedHandString, this.playerArray[0].getBet() + this.playerArray[1].getBet());
+                    
+                    this.newTurn();
+                    return;
+                }
+            case 3:
+                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet());
+                    this.playerArray[1].incrementCredit(this.playerArray[1].getBet());
+                    this.gameMaster.insertData(2, calculatedHandString, this.playerArray[0].getBet() + this.playerArray[1].getBet());
+                    
+                    this.newTurn();
+        }
+    }
+    private void newTurn(){
+
+        this.playerArray[0].setBet(100);
+        this.playerArray[0].decrementCredit(100);
+        this.playerArray[1].setBet(200);
+        this.playerArray[1].decrementCredit(200);
+        this.gameMaster.setMaxBet(200);
+        this.gameMaster.setFlopped(1, false);
+        this.gameMaster.setFlopped(2, false);
+        this.gameMaster.setplayerChangedCard(false);
+    
+        this.dealer.deal(playerArray);
+        
+        this.setCardPictures();
+        this.displayInterface();
+        
+        this.playerCard1.setDisable(false);
+        this.playerCard2.setDisable(false);
+        this.playerCard3.setDisable(false);
+        this.playerCard4.setDisable(false);
+        this.playerCard5.setDisable(false);
+        
+        this.textArea.appendText("\nPlease make your bet!");
+    }
+    
+    private void defeat(){
+    
+        this.textArea.appendText("\nVereség!!!");
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/GameOver.fxml"));
+            Parent root = fxmlLoader.load();
+            
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/gameover.css");
+            
+            Stage stage = (Stage)(this.aiBet.getScene().getWindow());
+            
+            stage.setTitle("Defeat!");
+            stage.setScene(scene);
+            fxmlLoader.<GameOverController>getController().setBackGround("Defeat!");
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    private void victory(){
+    
+        this.textArea.appendText("\nGyőzelem!!!");
+
+        try {
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/fxml/GameOver.fxml"));
+            Parent root = fxmlloader.load();
+            
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/gameover.css");
+            
+            Stage stage = (Stage)(this.aiBet.getScene().getWindow());
+            
+            stage.setTitle("Victory!");
+            stage.setScene(scene);
+            fxmlloader.<GameOverController>getController().setBackGround("Victory!");
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void setCardPictures(){
@@ -416,97 +541,46 @@ public class MainFXMLController implements Initializable {
         this.playerBet.setText(Integer.toString(this.playerArray[0].getBet()));
         this.betTextField.setText("0");
     }
+    public void afterInitialize(){
     
-    private void endTurn(){
-        if(this.gameMaster.getFlopped(1)){
-            this.playerArray[1].incrementBet(this.playerArray[0].getBet() + this.playerArray[1].getBet());
-            
-            this.newTurn();
-                    
-        }
-        if(this.gameMaster.getFlopped(2)){
-            this.playerArray[0].incrementBet(this.playerArray[0].getBet() + this.playerArray[1].getBet());
-            
-            this.newTurn();
-        }
-        
-        int winner = this.gameMaster.getWinner(this.playerArray[0].getHand(), this.playerArray[1].getHand());
-        
-        switch(winner){
-        
-            case 1:
-                if(this.playerArray[1].getCredit()==0){
-                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
-                    this.victory();
-                    return;
-                }
-                if(this.playerArray[0].getBet() < this.gameMaster.getMaxBet()){
-                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet()*2);
-                    this.playerArray[1].incrementCredit(this.gameMaster.getMaxBet() - this.playerArray[0].getBet());
-                    this.newTurn();
-                    return;
-                }else{
-                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
-                    this.newTurn();
-                    return;
-                }
-            case 2:
-                if(this.playerArray[0].getCredit()==0){
-                    this.playerArray[1].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
-                    this.defeat();
-                    return;
-                }
-                if(this.playerArray[1].getBet() < this.gameMaster.getMaxBet()){
-                    this.playerArray[1].incrementCredit(this.playerArray[1].getBet()*2);
-                    this.playerArray[0].incrementCredit(this.gameMaster.getMaxBet() - this.playerArray[1].getBet());
-                    this.newTurn();
-                    return;
-                }else{
-                    this.playerArray[1].incrementCredit(this.playerArray[0].getBet()+ this.playerArray[1].getBet());
-                    this.newTurn();
-                    return;
-                }
-            case 3:
-                    this.playerArray[0].incrementCredit(this.playerArray[0].getBet());
-                    this.playerArray[1].incrementCredit(this.playerArray[1].getBet());
-                    this.newTurn();
-        }
-    }
-    private void newTurn(){
-        
-        this.playerArray[0].setBet(0);
-        this.playerArray[1].setBet(0);
-        this.gameMaster.setMaxBet(0);
-        this.gameMaster.setFlopped(1, false);
-        this.gameMaster.setFlopped(2, false);
-        this.gameMaster.setplayerChangedCard(false);
-    
-        this.dealer.deal(playerArray);
-        
-        this.setCardPictures();
-        this.displayInterface();
-        
-        this.playerCard1.setDisable(false);
-        this.playerCard2.setDisable(false);
-        this.playerCard3.setDisable(false);
-        this.playerCard4.setDisable(false);
-        this.playerCard5.setDisable(false);
-        
-        this.textArea.appendText("\nPlease make your bet!");
-    }
-    
-    private void defeat(){
-    
-        this.textArea.appendText("\nVereség!!!");
-        this.anchorPane.setDisable(true);
-    }
-    private void victory(){
-    
-        this.textArea.appendText("\nGyőzelem!!!");
-        this.anchorPane.setDisable(true);
+        Stage st = (Stage)this.aiBet.getScene().getWindow();
+        st.setOnCloseRequest(e->Platform.exit());
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        this.playerArray[0] = new Player();
+        this.playerArray[1] = new Player();
+        
+        this.cardPicturesArray[0][0] = this.playerCard1;
+        this.cardPicturesArray[0][1] = this.playerCard2;
+        this.cardPicturesArray[0][2] = this.playerCard3;
+        this.cardPicturesArray[0][3] = this.playerCard4;
+        this.cardPicturesArray[0][4] = this.playerCard5;
+        
+        this.cardPicturesArray[1][0] = this.aiCard1;
+        this.cardPicturesArray[1][1] = this.aiCard2;
+        this.cardPicturesArray[1][2] = this.aiCard3;
+        this.cardPicturesArray[1][3] = this.aiCard4;
+        this.cardPicturesArray[1][4] = this.aiCard5;
+        
+        this.dealer.deal(playerArray);
+        
+        this.playerArray[0].setBet(100);
+        this.playerArray[0].decrementCredit(100);
+        this.playerArray[1].setBet(200);
+        this.playerArray[1].decrementCredit(200);
+        
+        this.setCardPictures();
+        
+        this.displayInterface();
+        
+        try {
+            this.anchorPane.setBackground(new Background(new BackgroundImage(new Image(new File("./src/main/resources/pictures/welcomeMenuBackGround.png").toURI().toURL().toExternalForm()),null,null,null,null)));
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.textArea.setOpacity(0.8);
+        this.textArea.appendText("\nPlese make your bet!");
+
     }    
 }

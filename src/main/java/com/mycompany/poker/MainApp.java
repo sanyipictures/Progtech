@@ -2,6 +2,7 @@ package com.mycompany.poker;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,16 +13,21 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainScene.fxml"));
+        
+        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenuScene.fxml"));
+        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/fxml/MainMenuScene.fxml"));
+        Parent root = fxmlloader.load();
         
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("Poker");
+        scene.getStylesheets().add("/styles/welcome.css");
+        
+        stage.setTitle("MainMenu");
         stage.setScene(scene);
+        fxmlloader.<MainMenuController>getController().afterInitialize();
         stage.show();
+        
     }
-
     /**
      * The main() method is ignored in correctly deployed JavaFX application.
      * main() serves only as fallback in case the application can not be

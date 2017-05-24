@@ -43,14 +43,18 @@ public class WinnerCalculator {
     public int winnerPlayer(String[] player1Hand, String[] player2Hand){
 
         LOGGER.log(Level.INFO, "winnerPlayer method has been called!");
-        LOGGER.log(Level.INFO, "The player's hand is: {0}", new Object[]{player1Hand.toString()});
-        LOGGER.log(Level.INFO, "The AI's hand is: {0}", new Object[]{player2Hand.toString()});
+        LOGGER.log(Level.INFO, "The player's hand is: ");
+        LOGGER.log(Level.INFO, "{0}", new Object[]{player1Hand.toString()});
+        LOGGER.log(Level.INFO, "The AI's hand is: ");
+        LOGGER.log(Level.INFO, "{0}", new Object[]{player2Hand.toString()});
         String[] playersCalculatedHand = new String[]{
                              calculateStrength(player1Hand),
                              calculateStrength(player2Hand),
                              };
-        LOGGER.log(Level.INFO, "The player's hand's strength as String: {0} ", new Object[]{playersCalculatedHand[0]});
-        LOGGER.log(Level.INFO, "The AI's hand's strength as String: {0} ", new Object[]{playersCalculatedHand[1]});
+        LOGGER.log(Level.INFO, "The player's hand's strength as String: {0} ");
+        LOGGER.log(Level.INFO, "{0}", new Object[]{playersCalculatedHand[0]});
+        LOGGER.log(Level.INFO, "The AI's hand's strength as String: {0} ");
+        LOGGER.log(Level.INFO, "{0}", new Object[]{playersCalculatedHand[1]});
         int strength[] = new int[2];
         
         for(int i = 0; i < 2; ++i){
@@ -67,11 +71,14 @@ public class WinnerCalculator {
                     playersCalculatedHand[i].contains("Pair")        ?3:
                     playersCalculatedHand[i].contains("High")        ?2:0;
         }
-        LOGGER.log(Level.INFO, "The player's hand's strength as integer: {0}", new Object[]{strength[0]});
-        LOGGER.log(Level.INFO, "The AI's hand's strength as integer: {0}", new Object[]{strength[1]});
+        LOGGER.log(Level.INFO, "The player's hand's strength as integer: ");
+        LOGGER.log(Level.INFO, "{0}", new Object[]{strength[0]});
+        LOGGER.log(Level.INFO, "The AI's hand's strength as integer: ");
+        LOGGER.log(Level.INFO, "{0}", new Object[]{strength[1]});
         if(strength[0] == strength[1]){
         
-            LOGGER.log(Level.INFO, "The two player has the same hand strength: {0}", new Object[]{strength[0]});
+            LOGGER.log(Level.INFO, "The two player has the same hand strength: ");
+            LOGGER.log(Level.INFO, "{0}", new Object[]{strength[0]});
             return this.all2Equivalent(playersCalculatedHand, strength[0]);
         }
         return strength[0] > strength[1] ? 1 : 2; 
@@ -101,7 +108,7 @@ public class WinnerCalculator {
      * @param player is the hand of a player
      * @return a String representation of the player's strength hand 
      */
-    private String calculateStrength(String[] player){
+    public String calculateStrength(String[] player){
         LOGGER.log(Level.INFO, "CalculateStrength method has been called!");
         String together = Arrays.toString(player);
         String eos      = new StringBuilder()
@@ -125,7 +132,8 @@ public class WinnerCalculator {
         }
         
         String straightFlush = getStraightType(eos);
-        LOGGER.log(Level.INFO, "getStraigthType returned with: {0}", straightFlush);
+        LOGGER.log(Level.INFO, "getStraigthType returned with: ");
+        LOGGER.log(Level.INFO, "{0}", straightFlush);
         //ha a színük megegyezik, de nem illeszkedik egyetlen színsor mintára sem, akkor csak flush
         if(straightFlush.equals("0")){
             LOGGER.log(Level.INFO, "Since it is not a straigth and flush, it calculates the strength of flush!");
@@ -207,10 +215,6 @@ public class WinnerCalculator {
                 break;
             }
         }
-    }
-    LOGGER.log(Level.INFO, "The calculated key-value arrays are: ");
-    for(int i = 0; i < cardKey.size(); ++i){
-        LOGGER.log(Level.INFO, "{0} {1} \n", new Object[]{cardKey.get(i), cardValue.get(i)});
     }
     //mivel listába lettek rendeze, ezért jöhet a típus szerinti rendezés
     int size = cardKey.size();

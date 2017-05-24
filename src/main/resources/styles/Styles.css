@@ -1,6 +1,9 @@
 .button {
     -fx-font-weight: bold;
 }
-#gold{
-    -fx-graphic: url("../pictures/spades2.png");
+#textArea{
+    -fx-background-color: indigo;
+}
+.label{
+    -fx-text-fill: blue;
 }
