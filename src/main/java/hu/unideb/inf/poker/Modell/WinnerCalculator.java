@@ -1,4 +1,4 @@
-package com.mycompany.poker;
+package hu.unideb.inf.poker.Modell;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +10,9 @@ import java.util.logging.Logger;
  * 
  */
 public class WinnerCalculator {
+    /**
+     * Logger instance for logging.
+     */
     private static final Logger LOGGER = Logger.getLogger(WinnerCalculator.class.getName());
     /**
      * Calculates the strength by an ordered, String represented hand.
@@ -237,8 +240,6 @@ public class WinnerCalculator {
                     return new StringBuilder()
                                .append("Poker")
                                .append(getCardStrength(cardKey.get(1))) 
-                               .append("With")
-                               .append(getCardStrength(cardKey.get(0)))
                                .toString();
                 }
             }

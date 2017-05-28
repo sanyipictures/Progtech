@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.poker;
+package hu.unideb.inf.poker.Modell;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * The Dealer class represents the Dealer's rules in a poker game.
@@ -20,13 +21,33 @@ import java.util.logging.Logger;
  * 
  */
 public class Dealer {
-    private static final Logger LOGGER = Logger.getLogger(Dealer.class.getName());
+    /**
+     * Logger instance for logging.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(Dealer.class.getName());
+    /**
+     * A list containing the cards.
+     */
     private static List<String> cardDeck     = new ArrayList<String>(52);
+    /**
+     * A list containing the clubs cards.
+     */
     private List<String> clubsPack           = new ArrayList<String>(13);
+    /**
+     * A list containing the diamonds cards.
+     */
     private List<String> diamondsPack        = new ArrayList<String>(13);
+    /**
+     * A list containing the hearts cards.
+     */
     private List<String> heartsPack          = new ArrayList<String>(13);
+    /**
+     * A list containing the spades cards.
+     */
     private List<String> spadesPack          = new ArrayList<String>(13);
-    
+    /**
+     * A Random class instance.
+     */
     private final Random randomNumber = new Random();
     
     /**
@@ -70,16 +91,15 @@ public class Dealer {
             
             t.setHand(hand);
         }
-        LOGGER.log(Level.INFO, "Cards are dealt to players!");
-        LOGGER.log(Level.INFO, "Player's cards are: !");
-        LOGGER.log(Level.INFO, "{0} {1} {2} {3} {4}", new Object[]{playerArray[0].getHand()[0], playerArray[0].getHand()[1], playerArray[0].getHand()[2], playerArray[0].getHand()[3], playerArray[0].getHand()[4]});
-        LOGGER.log(Level.FINE, "{0} {1} {2} {3} {4}", new Object[]{playerArray[1].getHand()[0], playerArray[1].getHand()[1], playerArray[1].getHand()[2], playerArray[1].getHand()[3], playerArray[1].getHand()[4]});
+        LOGGER.info("Cards are dealt to players!");
+        
     }
     
     /**
      * Executes the four pack's filling up, then riffles them together.
+     * @return just for unit test
      */
-    public void initializer(){
+    public int initializer(){
     
         initializeClubsPack();
         initializeDiamondsPack();
@@ -87,6 +107,7 @@ public class Dealer {
         initializeSpadesPack();
         
         riffleCardDeck();
+        return 1;
     }
     /**
      * Removes all card from the main pack, than riffle a new one.

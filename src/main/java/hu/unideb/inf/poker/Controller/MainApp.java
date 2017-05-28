@@ -1,4 +1,4 @@
-package com.mycompany.poker;
+package hu.unideb.inf.poker.Controller;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;

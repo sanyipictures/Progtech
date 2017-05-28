@@ -2,14 +2,11 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" minHeight="600.0" minWidth="800.0" prefHeight="200" prefWidth="320" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.poker.MainFXMLController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" minHeight="600.0" minWidth="800.0" prefHeight="200" prefWidth="320" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.unideb.inf.poker.Controller.MainFXMLController">
    <children>
       <Button fx:id="playerCard5" layoutX="459.0" layoutY="326.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" onAction="#cardClickedAction" rotate="30.0" />
       <Button fx:id="aiCard5" layoutX="469.0" layoutY="60.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="70.0" rotate="-30.0" />
@@ -21,12 +18,7 @@
       <Button fx:id="aiCard3" layoutX="365.0" layoutY="96.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" />
       <Button fx:id="aiCard2" layoutX="311.0" layoutY="85.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" rotate="15.0" />
       <Button fx:id="aiCard1" layoutX="264.0" layoutY="60.0" minHeight="100.0" minWidth="70.0" mnemonicParsing="false" rotate="30.0" />
-      <ImageView fx:id="gold" fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../Desktop/10-1489127800-gold.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="playerCredit" layoutX="31.0" layoutY="452.0" text="Label">
+      <Label fx:id="playerCredit" alignment="CENTER" layoutX="31.0" layoutY="452.0" text="Label">
          <font>
             <Font size="50.0" />
          </font>
@@ -55,12 +47,7 @@
             <Font size="10.0" />
          </font>
       </Button>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="589.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../Desktop/10-1489127800-gold.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="aiCredit" layoutX="622.0" layoutY="196.0" text="Label">
+      <Label fx:id="aiCredit" alignment="CENTER" layoutX="623.0" layoutY="89.0" text="Label">
          <font>
             <Font size="50.0" />
          </font>
@@ -70,11 +57,36 @@
             <Font size="40.0" />
          </font>
       </Label>
-      <Label fx:id="playerBet" layoutX="353.0" layoutY="423.0" text="Label" textAlignment="CENTER">
+      <Label fx:id="playerBet" alignment="CENTER" layoutX="353.0" layoutY="423.0" text="Label" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
       </Label>
-      <TextArea fx:id="textArea" layoutX="8.0" layoutY="10.0" prefHeight="260.0" prefWidth="200.0" />
+      <Button fx:id="quitButton" layoutX="31.0" layoutY="37.0" mnemonicParsing="false" onAction="#quitButtonAction" text="QUIT" />
+      <Label fx:id="playerCard1Label" layoutX="256.0" layoutY="301.0" rotate="-30.0" text="Label" />
+      <Label fx:id="playerCard2Label" layoutX="311.0" layoutY="269.0" rotate="-15.0" text="Label" />
+      <Label fx:id="playerCard3Label" layoutX="386.0" layoutY="261.0" text="Label" />
+      <Label fx:id="playerCard4Label" layoutX="457.0" layoutY="269.0" rotate="15.0" text="Label" />
+      <Label fx:id="playerCard5Label" layoutX="512.0" layoutY="301.0" rotate="30.0" text="Label" />
+      <Label fx:id="aiCard1Label" layoutX="256.0" layoutY="162.0" rotate="30.0" text="Label" />
+      <Label fx:id="aiCard2Label" layoutX="311.0" layoutY="188.0" rotate="15.0" text="Label" />
+      <Label fx:id="aiCard3Label" layoutX="386.0" layoutY="205.0" text="Label" />
+      <Label fx:id="aiCard4Label" layoutX="457.0" layoutY="188.0" rotate="-15.0" text="Label" />
+      <Label fx:id="aiCard5Label" layoutX="515.0" layoutY="162.0" rotate="-30.0" text="Label" />
+      <Label fx:id="playerCreditHintLabel" alignment="CENTER" layoutX="59.0" layoutY="418.0" text="Label">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="aiCreditHintLabel" alignment="CENTER" layoutX="651.0" layoutY="178.0" text="Label">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="communicationLabel" alignment="CENTER" layoutX="46.0" layoutY="205.0" prefHeight="88.0" prefWidth="742.0" text="Label">
+         <font>
+            <Font size="60.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
