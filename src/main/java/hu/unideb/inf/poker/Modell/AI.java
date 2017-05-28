@@ -54,7 +54,7 @@ public class AI {
 
                      if(random.nextInt(100) < 30){
                          gameMaster.setFlopped(2, true);
-                         LOGGER.info("AI has flopped cards");
+                         LOGGER.info("57 AI has flopped cards");
                          return false;
                      }
                 }
@@ -63,7 +63,7 @@ public class AI {
 
                      if(random.nextInt(100) < 20){
                          gameMaster.setFlopped(2, true);
-                         LOGGER.info( "AI has flopped cards");
+                         LOGGER.info( "66 AI has flopped cards");
                          return false;
                      }
                 }
@@ -72,7 +72,7 @@ public class AI {
 
                      if(random.nextInt(100) < 15){
                          gameMaster.setFlopped(2, true);
-                         LOGGER.info( "AI has flopped cards");
+                         LOGGER.info( "75 AI has flopped cards");
                          return false;
                      }
                 }
@@ -81,7 +81,7 @@ public class AI {
 
                      if(random.nextInt(100) < 10){
                          gameMaster.setFlopped(2, true);
-                         LOGGER.info( "AI has flopped cards");
+                         LOGGER.info( "84 AI has flopped cards");
                          return false;
                      }
                 }
@@ -90,7 +90,7 @@ public class AI {
 
                      if(random.nextInt(100) < 5){
                          gameMaster.setFlopped(2, true);
-                         LOGGER.info( "AI has flopped cards");
+                         LOGGER.info( "93 AI has flopped cards");
                          return false;
                      }
                 }
@@ -99,7 +99,7 @@ public class AI {
 
                      if(random.nextInt(100) < 2){
                          gameMaster.setFlopped(2, true);
-                         LOGGER.info( "AI has flopped cards");
+                         LOGGER.info( "102 AI has flopped cards");
                          return false;
                      }
                 }
@@ -112,12 +112,12 @@ public class AI {
             player.incrementBet(player.getCredit());
             player.setCredit(0);
             gameMaster.setPlayerAllIn(2, true);
-            LOGGER.info( "AI takes ALL-IN!");
+            LOGGER.info( "115 AI takes ALL-IN!");
                              
         }else{            
             player.decrementCredit(gameMaster.getMaxBet() - player.getBet() );
             player.incrementBet(gameMaster.getMaxBet() - player.getBet() );
-            LOGGER.info( "AI holds the bet!");
+            LOGGER.info( "120 AI holds the bet!");
                              
             }
                      return true;

@@ -45,19 +45,15 @@ public class WinnerCalculator {
      */
     public int winnerPlayer(String[] player1Hand, String[] player2Hand){
 
-        LOGGER.info("winnerPlayer method has been called!");
-        LOGGER.info("The player's hand is: ");
-        LOGGER.info("{}", new Object[]{player1Hand.toString()});
-        LOGGER.info("The AI's hand is: ");
-        LOGGER.info("{}", new Object[]{player2Hand.toString()});
+        LOGGER.info("48 winnerPlayer method has been called!");
+        LOGGER.info("49 The player's hand is:{} {} {} {} {}",player1Hand[0], player1Hand[1], player1Hand[2], player1Hand[3], player1Hand[4]);
+        LOGGER.info("50 The AI's hand is:{} {} {} {} {}",player2Hand[0], player2Hand[1], player2Hand[2], player2Hand[3], player2Hand[4] );
         String[] playersCalculatedHand = new String[]{
                              calculateStrength(player1Hand),
                              calculateStrength(player2Hand),
                              };
-        LOGGER.info("The player's hand's strength as String:");
-        LOGGER.info("{}", new Object[]{playersCalculatedHand[0]});
-        LOGGER.info("The AI's hand's strength as String: ");
-        LOGGER.info("{}", new Object[]{playersCalculatedHand[1]});
+        LOGGER.info("55 The player's hand's strength as String:{}", playersCalculatedHand[0]);
+        LOGGER.info("56 The AI's hand's strength as String:{} ", playersCalculatedHand[1]);
         int strength[] = new int[2];
         
         for(int i = 0; i < 2; ++i){
@@ -74,14 +70,11 @@ public class WinnerCalculator {
                     playersCalculatedHand[i].contains("Pair")        ?3:
                     playersCalculatedHand[i].contains("High")        ?2:0;
         }
-        LOGGER.info("The player's hand's strength as integer: ");
-        LOGGER.info("{0}", new Object[]{strength[0]});
-        LOGGER.info("The AI's hand's strength as integer: ");
-        LOGGER.info("{0}", new Object[]{strength[1]});
+        LOGGER.info("73 The player's hand's strength as integer:{} ",strength[0]);
+        LOGGER.info("74 The AI's hand's strength as integer:{} ",strength[1]);
         if(strength[0] == strength[1]){
         
-            LOGGER.info("The two player has the same hand strength: ");
-            LOGGER.info("{0}", new Object[]{strength[0]});
+            LOGGER.info("77 The two player has the same hand strength:{} ", strength[0]);
             return this.all2Equivalent(playersCalculatedHand, strength[0]);
         }
         return strength[0] > strength[1] ? 1 : 2; 
@@ -112,7 +105,7 @@ public class WinnerCalculator {
      * @return a String representation of the player's strength hand 
      */
     public String calculateStrength(String[] player){
-        LOGGER.info("CalculateStrength method has been called!");
+        LOGGER.info("108 CalculateStrength method has been called!");
         String together = Arrays.toString(player);
         String eos      = new StringBuilder()
                               .append(player[0].charAt(player[0].length()-1))
@@ -127,19 +120,18 @@ public class WinnerCalculator {
         ( player[0].startsWith("h") && player[1].startsWith("h") && player[2].startsWith("h") && player[3].startsWith("h") && player[4].startsWith("h")) ||
         ( player[0].startsWith("d") && player[1].startsWith("d") && player[2].startsWith("d") && player[3].startsWith("d") && player[4].startsWith("d"))
       ){
-        LOGGER.info("The hand stands with te same colors!");
+        LOGGER.info("123 The hand stands with te same colors!");
         //ha a kártyák színe azonos, és tartalmazza a '0', 'J', 'Q', 'K', 'A' kártyákat, akkor royalflush
         if( together.contains("0") && together.contains("A") && together.contains("J") && together.contains("Q") && together.contains("K") ){
-           LOGGER.info("RoyalFlush has been detected!!!");
+           LOGGER.info("126 RoyalFlush has been detected!!!");
             return "RoyalFlush";
         }
         
         String straightFlush = getStraightType(eos);
-        LOGGER.info("getStraigthType returned with: ");
-        LOGGER.info("{0}", straightFlush);
+        LOGGER.info("131 getStraigthType returned with:{} ", straightFlush);
         //ha a színük megegyezik, de nem illeszkedik egyetlen színsor mintára sem, akkor csak flush
         if(straightFlush.equals("0")){
-            LOGGER.info("Since it is not a straigth and flush, it calculates the strength of flush!");
+            LOGGER.info("134 Since it is not a straigth and flush, it calculates the strength of flush!");
             int temp;
             int[] valueArray = new int[5];
             
@@ -157,8 +149,7 @@ public class WinnerCalculator {
                         }
                     }
                 }
-            LOGGER.info("After bubble sort, we got the decremented strength of the cards:");
-            LOGGER.info("{0} {1} {2} {3} {4}", new Object[]{valueArray[0], valueArray[1], valueArray[2], valueArray[3], valueArray[4]});
+            LOGGER.info("152 After bubble sort, we got the decremented strength of the cards:{} {} {} {} {}", valueArray[0], valueArray[1], valueArray[2], valueArray[3], valueArray[4]);
             return new StringBuilder()
                                .append("FlushWith")
                                .append(getCardStrength(valueArray[0]))
@@ -173,7 +164,7 @@ public class WinnerCalculator {
                                .toString();
         }else{
         //ellenben a megfelelő típusú színsor
-            LOGGER.info("It's a straight flush!!! ");
+            LOGGER.info("167 It's a straight flush!!! ");
             return straightFlush + "Flush";
         }
    
@@ -181,7 +172,7 @@ public class WinnerCalculator {
     //megnézzük, hogy sor-e
     String straight = getStraightType(eos);
     if(!straight.equals("0")){ 
-        LOGGER.info("We have reached the Straigth phase, whitch means, it is not any kind of flush!");
+        LOGGER.info("175 We have reached the Straigth phase, whitch means, it is not any kind of flush!");
         return straight; 
     }
     //ha a kézben nincs ismétlődés, akkor a lista mérete 5, ha van, akkor a méret csökken
@@ -190,7 +181,7 @@ public class WinnerCalculator {
     //ha két pár, akkor a méret 3
     //ha full house, akkor 2
     //ha poker, akkor 2
-    LOGGER.info("Now it is not a flush, neighter straight!");
+    LOGGER.info("184 Now it is not a flush, neighter straight!");
     String cardStrength = "234567890JQKA";
     ArrayList<Integer> cardKey = new ArrayList<>();
     ArrayList<Integer> cardValue = new ArrayList<>();
@@ -225,7 +216,7 @@ public class WinnerCalculator {
     switch(size){
     //megnézzük, hogy póker-e, vagy fullhouse
         case 2:
-            LOGGER.info("Let us see, if it is a Poker! ");
+            LOGGER.info("219 Let us see, if it is a Poker! ");
             //ha a másik értékből csak 1 van, akkor az egyértelműen póker, viszont 
             //egyezés esetén szükség van a kártya értékére
             if(cardValue.get(0) == 1 || cardValue.get(1) == 1){
@@ -244,7 +235,7 @@ public class WinnerCalculator {
                 }
             }
             //ha az előbbi nem teljesül, akkor full house
-            LOGGER.info("Nope, it's not Poker, let's see, if it's a FullHouse!");
+            LOGGER.info("238 Nope, it's not Poker, let's see, if it's a FullHouse!");
             if(cardValue.get(0) > cardValue.get(1)){
                 
                     return new StringBuilder()
@@ -259,7 +250,7 @@ public class WinnerCalculator {
                                .toString();
                 }
         case 3://ha van egyik kártya számúból 3, akkor drill
-            LOGGER.info("Neighter Poker, nor FullHose, pray for a drill!");
+            LOGGER.info("253 Neighter Poker, nor FullHose, pray for a drill!");
             if(cardValue.get(0) == 3 || cardValue.get(1) == 3 || cardValue.get(2) == 3){
             
                 int temp;
@@ -285,7 +276,7 @@ public class WinnerCalculator {
                 
             }
             //elenkező esetben két pár
-            LOGGER.info("Still not eneught, let's try with TwoPair!");
+            LOGGER.info("279 Still not eneught, let's try with TwoPair!");
             int temp;
                 //két pár esetén előre hozom a két számosságú kártyákat
                 //pl A-1 5-2 K-2 ből lesz 5-2 K-2 A-1, ahol a kötőjel előtt
@@ -323,7 +314,7 @@ public class WinnerCalculator {
                                .append(getCardStrength(cardKey.get(2)))
                                .toString();
         case 4: //előre hozza a párt
-            LOGGER.info("We can only hope in a Pair!");
+            LOGGER.info("317 We can only hope in a Pair!");
                 for(int x = 0; x < 4; ++x){
                     for(int y = 1; y < 4-x; ++y){
                         if(cardValue.get(y - 1) <  cardValue.get(y)){
@@ -362,7 +353,7 @@ public class WinnerCalculator {
                                .toString();
         case 5://mivel itt nincs kártya ismétlődés, ezért nem kell foglalkozni
                //a számossággal, bőven elég erő szerint rendezni.
-            LOGGER.info("Bad Luck, it's only HighCard!");
+            LOGGER.info("356 Bad Luck, it's only HighCard!");
             for(int x = 0; x < 5; ++x){
                     for(int y = 1; y < 5-x; ++y){
                         if(cardKey.get(y - 1) <  cardKey.get(y)){

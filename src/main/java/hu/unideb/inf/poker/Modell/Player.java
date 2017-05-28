@@ -37,7 +37,7 @@ public class Player {
         this.selectedCards = new boolean[]{false,false,false,false,false};
         this.bet           = 0;
         
-        LOGGER.info("A player Instance has been created!");
+        LOGGER.info("40 A player Instance has been created!");
     }
     /**
      * Setter for the credit property.
@@ -46,8 +46,7 @@ public class Player {
      */
     public void setCredit(int amount){ 
         this.credit = amount; 
-        LOGGER.info( "The player's credit has been changed to: ");
-        LOGGER.info( "{0}" ,this.getCredit());
+        LOGGER.info( "49 The player's credit has been changed to: {} ",this.getCredit());
     }
     /**
      * Getter for the credit property.
@@ -62,8 +61,7 @@ public class Player {
      */
     public void setBet(int amount){
         this.bet = amount;
-        LOGGER.info( "The player's bet has been changed to: ");
-        LOGGER.info( "{0}", this.getBet());
+        LOGGER.info( "64 The player's bet has been changed to: {} ", this.getBet());
     }
     /**
      * Getter for the bet property.
@@ -78,10 +76,8 @@ public class Player {
      */
     public void incrementBet(int amount){
         this.bet += amount;
-        LOGGER.info( "The player's bet has been incremented with: " );
-        LOGGER.info( "{0}", amount);
-        LOGGER.info( "The player's bet has been changed to: ");
-        LOGGER.info( "{0}", this.getBet());
+        LOGGER.info( "79 The player's bet has been incremented with:{} ",amount );
+        LOGGER.info( "80 The player's bet has been changed to:{} ",this.getBet());
     }
     /**
      * Decrements the player's actual bet.
@@ -90,10 +86,8 @@ public class Player {
      */
     public void decrementBet(int amount){
         this.bet -= amount;
-        LOGGER.info( "The player's bet has been decremented with: " );
-        LOGGER.info( "{0}", amount);
-        LOGGER.info( "The player's credit has been changed to: ");
-        LOGGER.info( "{0}", this.getBet());
+        LOGGER.info( "89 The player's bet has been decremented with:{} ", amount);
+        LOGGER.info( "90 The player's credit has been changed to:{} ", this.getBet());
     }
     public String[] getHand(){ return this.hand; }
     /**
@@ -103,8 +97,7 @@ public class Player {
      */
     public void setHand(String[] hand){ 
         this.hand = hand.clone(); 
-        LOGGER.info( "The player's hand has been changed to: ");
-        LOGGER.info( "{} {} {} {} {}", new Object[]{this.hand[0], this.hand[1], this.hand[2], this.hand[3], this.hand[4]});
+        LOGGER.info( "100 The player's hand has been changed to: {} {} {} {} {}", this.hand[0], this.hand[1], this.hand[2], this.hand[3], this.hand[4]);
     }
     /**
      * Sets a single card in the player's hand, at the given position.
@@ -119,7 +112,7 @@ public class Player {
      */
     public void setCard(String card, int position){
         this.hand[position] = card;
-        LOGGER.info( "The player's card at {} position has been changed to {}", new Object[]{position+1, card});
+        LOGGER.info( "115 The player's card at {} position has been changed to {}", position+1, card);
     }
     /**
      * Getter for the selectedCards property.
@@ -146,11 +139,11 @@ public class Player {
         if(this.selectedCards[position-1]){
         
             this.selectedCards[position-1] = false;
-            LOGGER.info( "The player's cardselection has been changed to false ");
+            LOGGER.info( "142 The player's cardselection has been changed to false ");
             return;
         }
         this.selectedCards[position-1] = true;
-        LOGGER.info( "The player's cardselection has been changed to true ");
+        LOGGER.info( "146 The player's cardselection has been changed to true ");
     }
     /**
      * Sets all cards' selected status to false.
@@ -169,7 +162,7 @@ public class Player {
      */
     public void incrementCredit(int amount){ 
         this.credit += amount; 
-        LOGGER.info( "The player's credit has been incrmented with " + amount +" amount, new value: ", this.getCredit());
+        LOGGER.info( "165 The player's credit has been incrmented with " + amount +" amount, new value:{} ", this.getCredit());
     }
     /**
      * Decrements the player's credit with a specified amount of credit.
@@ -178,7 +171,7 @@ public class Player {
      */
     public void decrementCredit(int amount){
         this.credit -= amount; 
-        LOGGER.info( "The player's credit has been decremented with {} ", new Object[]{amount});
-        LOGGER.info( "The player's new credit amount is {}", new Object[]{this.getCredit()});
+        LOGGER.info( "174 The player's credit has been decremented with {} ", amount);
+        LOGGER.info( "175 The player's new credit amount is {}",this.getCredit());
     }
 }

@@ -91,7 +91,7 @@ public class Dealer {
             
             t.setHand(hand);
         }
-        LOGGER.info("Cards are dealt to players!");
+        LOGGER.info("94 Cards are dealt to players!");
         
     }
     

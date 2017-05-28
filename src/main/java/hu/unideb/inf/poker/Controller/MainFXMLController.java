@@ -201,7 +201,7 @@ public class MainFXMLController implements Initializable {
                             }));
         timeline.play();
         
-        LOGGER.info( "Player has flopped cards!");
+        LOGGER.info( " 204 Player has flopped cards!");
         
     }
     
@@ -209,7 +209,7 @@ public class MainFXMLController implements Initializable {
     private void betButtonAction(ActionEvent event){
         if(this.gameMaster.getPlayerAllIn(1)){
         
-            LOGGER.info("player is in all in, so returns.");
+            LOGGER.info(" 212 player is in all in, so returns.");
             return;
         
         }
@@ -218,7 +218,7 @@ public class MainFXMLController implements Initializable {
         try{
             betAmount = Integer.parseInt(this.betTextField.getText());
         }catch(NumberFormatException exception){
-            LOGGER.error("Player has entered invalid number!", exception);
+            LOGGER.error("221 Player has entered invalid number!", exception);
             
             Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                 this.communicationLabel.setVisible(true);
@@ -227,14 +227,14 @@ public class MainFXMLController implements Initializable {
                                 new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false))
             );
             timeline1.play();
-            LOGGER.info("after timeline1.play called");
+            LOGGER.info(" 230 after timeline1.play called");
             return;
         }
         if(betAmount > this.gameMaster.getPlayerArray()[0].getCredit()){betAmount = this.gameMaster.getPlayerArray()[0].getCredit();}
         
         if(betAmount < this.gameMaster.getMinBet()){
             if(this.gameMaster.getPlayerArray()[0].getCredit() < this.gameMaster.getMinBet()){
-                LOGGER.info( "Player has put all in!");
+                LOGGER.info( "237 Player has put all in!");
 
                 Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                         this.communicationLabel.setVisible(true);
@@ -252,15 +252,15 @@ public class MainFXMLController implements Initializable {
                                     }));                
                 timeline2.play();
                 timeline2.setOnFinished(e -> {
-                    LOGGER.info("all in, and timeline2 has ended.");
+                    LOGGER.info("255 all in, and timeline2 has ended.");
                         this.displayInterface();
                         this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster);
-                        LOGGER.info("ai turn ended");
+                        LOGGER.info("258 ai turn ended");
                 });
                 
                 
                 if(gameMaster.getFlopped(2)){
-                    LOGGER.info("ai ha flopped!");
+                    LOGGER.info("263 ai ha flopped!");
                     Timeline timeline3 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.playerCreditHintLabel.setVisible(true);
@@ -284,7 +284,7 @@ public class MainFXMLController implements Initializable {
                     );
                     timeline3.play();
                     timeline3.setOnFinished(e -> this.endTurn());
-                    LOGGER.info("timeline3 ended");
+                    LOGGER.info("287 timeline3 ended");
                     return;
                 }
                 Timeline timeline4 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
@@ -303,7 +303,7 @@ public class MainFXMLController implements Initializable {
                 
                 return;
             }
-            LOGGER.info( "Player tries to bet below minimum amount!");
+            LOGGER.info("306 Player tries to bet below minimum amount!");
             Timeline timeline5 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
                                              new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setText("The minimum bet is 200! Increase your bet!!!")),
                                              new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false)));
@@ -314,7 +314,7 @@ public class MainFXMLController implements Initializable {
         if( (betAmount + this.gameMaster.getPlayerArray()[0].getBet()) >= this.gameMaster.getMaxBet()){
             if( betAmount > this.gameMaster.getPlayerArray()[0].getCredit() ){
                 
-                LOGGER.info( "Player has put all in!");
+                LOGGER.info("317 Player has put all in!");
                 Timeline timeline6 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                         this.communicationLabel.setVisible(true);
                                         this.playerCreditHintLabel.setText("-"+Integer.toString(this.gameMaster.getPlayerArray()[0].getCredit()));
@@ -333,10 +333,12 @@ public class MainFXMLController implements Initializable {
                                             
                                     }));                
                 timeline6.play();
+                LOGGER.info("336 timeline6 called, interface updates with all in actions, and we are waiting timeline6 to finish");
                 timeline6.setOnFinished(e -> this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster));
-                
+                LOGGER.info("338 timeline6 called the ai turn, and now we decide, if it flopped or not");
                 
                 if(gameMaster.getFlopped(2)){
+                    LOGGER.info("341 yes, it flopped, now we shows the ai cards, and ends the turn after that");
                     Timeline timeline7 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.playerCreditHintLabel.setVisible(true);
@@ -359,28 +361,36 @@ public class MainFXMLController implements Initializable {
                                             })                
                     );
                     timeline7.play(); 
+                    LOGGER.info("364 timeline7 starts, lets see what happens after that!");
                     timeline7.setOnFinished(e -> {
-                        LOGGER.info( "AI flopped cards!");
+                        LOGGER.info("363 timeline7 finished, we try to call the end turn method");
                         this.endTurn();
                     });
                     
                     
                 }
+                LOGGER.info("372 nope, it doesn't flops, it still has the courage to fight! we shows the interface changes");
                 Timeline timeline8 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("AI holds your bet!");
                                             this.aiCreditHintLabel.setText("-"+Integer.toString(this.gameMaster.getMaxBet()-this.gameMaster.getPlayerArray()[1].getBet()));
                                             }),
-                                            new KeyFrame(Duration.seconds(6.0), e -> {this.communicationLabel.setText("Press check to end turn!");}),
+                                            new KeyFrame(Duration.seconds(6.0), e -> {
+                                                this.communicationLabel.setText("Press check to end turn!");
+                                                this.displayInterface();
+                                            }),
                                             new KeyFrame(Duration.seconds(9.0), e -> {
+                                            
                                             this.communicationLabel.setVisible(false);
                                             this.aiCreditHintLabel.setVisible(false);
-                                            this.displayInterface();
+                                            
                                             })                
                     );
                 timeline8.play();
+                LOGGER.info("382 timeline8 called, and we are waiting for things to happen, especialy to return from this method!");
                 
             }else{
+                LOGGER.info("393 so we made our bet over the current max bet!");
                 String betString = Integer.toString(betAmount);
                 this.gameMaster.getPlayerArray()[0].incrementBet(betAmount);
                 this.gameMaster.setMaxBet(this.gameMaster.getPlayerArray()[0].getBet());
@@ -400,9 +410,12 @@ public class MainFXMLController implements Initializable {
                                         })
                 );
                 timeline9.play();
+                LOGGER.info("413 timeline9 has started, we communicate to the player, what's the situation");
                 timeline9.setOnFinished(e -> this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster));
-
+                LOGGER.info("415 timeline9 ended, and we hopefully called ai turn");
+                
                 if(gameMaster.getFlopped(2)){
+                    LOGGER.info("418 yes we called, and we think it has flopped!");
                     Timeline timeline10 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.playerCreditHintLabel.setVisible(true);
@@ -424,25 +437,31 @@ public class MainFXMLController implements Initializable {
                                             })                
                     );
                     timeline10.play(); 
+                    LOGGER.info("440 timeline10 has called, and we shows what's going on at ai's place");
                     timeline10.setOnFinished(e -> {
-                        LOGGER.info( "AI flopped cards!");
+                        LOGGER.info("429 we showed everything, so we ends the turn!");
                         this.endTurn();
                         
                     });
+                    LOGGER.info("433 end turn called, we are after timeline10, waiting for return!");
                     return;
                 }
+                LOGGER.info("there is no flopping, so we just communicate the ai's fighting potential");
                 Timeline timeline11 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("AI holds your bet!");
                                             }),
-                                            new KeyFrame(Duration.seconds(6.0), e -> this.communicationLabel.setText("Press check to end turn or increase your bet!")),
+                                            new KeyFrame(Duration.seconds(6.0), e -> {
+                                                this.communicationLabel.setText("Press check to end turn or increase your bet!");
+                                                this.displayInterface();
+                                            }),
                                             new KeyFrame(Duration.seconds(9.0), e -> {
                                             this.communicationLabel.setVisible(false);
-                                            this.displayInterface();
+                                            
                                             })                
                     );
                 timeline11.play();
-                
+                LOGGER.info("447 timeline11 play called and what's happening now? please return and don't go away!");
             }
         }
     }
@@ -454,12 +473,12 @@ public class MainFXMLController implements Initializable {
                                              new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setText("You can not check without any bet!")),
                                              new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false)));
             timeline12.play();
-            
+            LOGGER.info("459 can not check sceduled waiting to return!");
             return;
         }
         
         if(this.gameMaster.getPlayerArray()[0].getBet() == this.gameMaster.getPlayerArray()[1].getBet()){
-            LOGGER.info( "Player has checked!");
+            LOGGER.info( "464 Player has checked!");
             Timeline timeline13 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                 this.communicationLabel.setVisible(true);
                                 this.communicationLabel.setText("You have checked!!");
@@ -476,7 +495,7 @@ public class MainFXMLController implements Initializable {
         } 
         if(this.gameMaster.getPlayerArray()[0].getBet() < this.gameMaster.getPlayerArray()[1].getBet()){
             if(this.gameMaster.getPlayerAllIn(1)){
-                LOGGER.info( "Player has checked!");
+                LOGGER.info("481 Player has checked, becouse we are in all in");
             Timeline timeline14 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                 this.communicationLabel.setVisible(true);
                                 this.communicationLabel.setText("You have checked!!");
@@ -487,6 +506,7 @@ public class MainFXMLController implements Initializable {
                     })
             );
             timeline14.play();
+            LOGGER.info("492 timeline ended hopefully,so wait to end turn! ");
             timeline14.setOnFinished(e -> this.endTurn());
             return;
             }
@@ -494,6 +514,7 @@ public class MainFXMLController implements Initializable {
                                              new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setText("You can not check without any bet!")),
                                              new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false)));
             timeline15.play();
+            LOGGER.info("500 timeline15 playes, end after this we shuold return!");
         } 
    
     }
@@ -562,6 +583,7 @@ public class MainFXMLController implements Initializable {
      * Makes the nececcary steps after both player checks.
      */
     private void endTurn(){
+        LOGGER.info("565 end turn called!");
         String calculatedHandString = this.gameMaster.getCalculatedStrengthAsString(this.gameMaster.getPlayerArray()[0].getHand());
         
         if(this.gameMaster.getFlopped(1) == true){
@@ -572,9 +594,9 @@ public class MainFXMLController implements Initializable {
             }else{
                 this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
                 this.gameMaster.insertData(0, calculatedHandString , this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
-
+                LOGGER.info("575 flopped card, and increase enemy credit, and call new turn.");
                 this.newTurn();
-                
+                LOGGER.info("578 new turn ended, we are before return statement");
                 return;
             }
         }
@@ -587,7 +609,9 @@ public class MainFXMLController implements Initializable {
 
                 this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
                 this.gameMaster.insertData(1, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
+                LOGGER.info("591 ai flopped card, and increase player's credit, and call new turn.");
                 this.newTurn();
+                LOGGER.info("593 new turn ended, we are before return statement");
                 return;
             }
         }
@@ -627,6 +651,7 @@ public class MainFXMLController implements Initializable {
                                                                          })
                             ); 
                     timeline16.play();
+                    LOGGER.info("654 timeline16 called, so we are in allin, and we won!");
                     timeline16.setOnFinished(e -> {
                         this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()*2);
                         this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getMaxBet() - this.gameMaster.getPlayerArray()[0].getBet());
@@ -635,7 +660,7 @@ public class MainFXMLController implements Initializable {
                         this.newTurn();
                     
                     });
-                    
+                    LOGGER.info("641 new turn ended in timeline, we are before return statement");
                     return;
                 }else{
                 Timeline timeline17 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
@@ -659,12 +684,13 @@ public class MainFXMLController implements Initializable {
                                     })
                             ); 
                     timeline17.play();
+                    LOGGER.info("687 we won as we should do it, and we started the timeline7");
                     timeline17.setOnFinished(e -> {
                         this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()+ this.gameMaster.getPlayerArray()[1].getBet());
                         this.gameMaster.insertData(1, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
                         this.newTurn();
                     });
-
+                    LOGGER.info("670 new turn ended in timeline17, we are before return statement");
                     return;
                 }
             case 2:
@@ -696,13 +722,14 @@ public class MainFXMLController implements Initializable {
                                                              })
                 );
                     timeline18.play();
+                    LOGGER.info("725 timeline18 called, so we lost the turn and ai was in all in");
                     timeline18.setOnFinished(e -> {
                         this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[1].getBet()*2);
                         this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getMaxBet() - this.gameMaster.getPlayerArray()[1].getBet());
                         this.gameMaster.insertData(0, calculatedHandString, this.gameMaster.getPlayerArray()[1].getBet()*2);
                         this.newTurn();
                     });
-                    
+                    LOGGER.info("708 new turn ended in timeline18, we are before return statement");
                     return;
                 }else{
                     Timeline timeline19 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
@@ -726,12 +753,13 @@ public class MainFXMLController implements Initializable {
                                                              })
                 );
                     timeline19.play();
+                    LOGGER.info("756 timeline19 called, so we lost, and ai is not in all in");
                     timeline19.setOnFinished(e -> {
                         this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()+ this.gameMaster.getPlayerArray()[1].getBet());
                         this.gameMaster.insertData(0, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
                         this.newTurn();
                     });
-                    
+                    LOGGER.info("737 new turn ended in timeline19, we are before return statement");
                     return;
                 }
             case 3:
@@ -758,12 +786,14 @@ public class MainFXMLController implements Initializable {
                                                 })
                 );
                 timeline20.play();
+                LOGGER.info("789 sometimes its hard to decide who is better, so it's a win-win situation");
                 timeline20.setOnFinished(e ->{
                     this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet());
                     this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[1].getBet());
                     this.gameMaster.insertData(2, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet());
                     this.newTurn();
                 });
+                LOGGER.info("796 timeline20 ended, and hopefully new turn called, and we return!");
         }
     }
     /**
@@ -771,6 +801,7 @@ public class MainFXMLController implements Initializable {
      */
     private void newTurn(){
 
+        LOGGER.info("804 new turn has called!");
         if(this.gameMaster.getPlayerArray()[0].getCredit() < 100){
             this.defeat();
             return;
@@ -788,7 +819,7 @@ public class MainFXMLController implements Initializable {
             
             this.gameMaster.getPlayerArray()[0].setBet(100);
             this.gameMaster.getPlayerArray()[0].decrementCredit(100);
-            this.gameMaster.setPlayerAllIn(1, true);
+            this.gameMaster.setPlayerAllIn(1, false);
         }
         if(this.gameMaster.getPlayerArray()[1].getCredit() == 200){
             
@@ -798,6 +829,7 @@ public class MainFXMLController implements Initializable {
         }else{
             this.gameMaster.getPlayerArray()[1].setBet(200);
             this.gameMaster.getPlayerArray()[1].decrementCredit(200);
+            this.gameMaster.setPlayerAllIn(2, false);
         }
         
         this.gameMaster.setMaxBet(200);
@@ -815,7 +847,7 @@ public class MainFXMLController implements Initializable {
         this.playerCard3.setDisable(false);
         this.playerCard4.setDisable(false);
         this.playerCard5.setDisable(false);
-        
+        LOGGER.info("823 everithing has set!");
         Timeline timeline21 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("Please make your bet!");
@@ -823,6 +855,7 @@ public class MainFXMLController implements Initializable {
                                         new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false))
         );
         timeline21.play();
+        LOGGER.info("857 timeline21 has been called, and this is the end of new turn.");
     }
     /**
      * In case of defeat, shows the victory pop up window.
