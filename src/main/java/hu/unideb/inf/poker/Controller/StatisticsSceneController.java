@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +33,11 @@ import javafx.stage.Stage;
  */
 public class StatisticsSceneController implements Initializable {
 
+    /**
+    * Logger instance for logging.
+    */
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsSceneController.class.getName());
+    
     private EntityManagement dbConnect;
     private ArrayList<Long> handStatistic;
     private final XYChart.Series set1 = new XYChart.Series();
@@ -73,7 +78,7 @@ public class StatisticsSceneController implements Initializable {
             fxmlLoader.<MainMenuController>getController().afterInitialize();
             stage.show();
         } catch (IOException ex) {
-            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getLocalizedMessage());
         }
     }
     

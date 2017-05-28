@@ -8,8 +8,8 @@ package hu.unideb.inf.poker.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +28,11 @@ import javafx.stage.Stage;
  */
 public class GameOverController implements Initializable {
 
+    /**
+     * Logger instance for logging.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameOverController.class.getName());
+    
     @FXML
     private ImageView backgoundImageView;
     @FXML
@@ -55,7 +60,7 @@ public class GameOverController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException ex) {
-            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getLocalizedMessage());
         }
     }
     @FXML
@@ -73,7 +78,7 @@ public class GameOverController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException ex) {
-            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, "Unable to load the statistics scene!", ex);
+            LOGGER.error(ex.getLocalizedMessage());
         }
     }
     @FXML

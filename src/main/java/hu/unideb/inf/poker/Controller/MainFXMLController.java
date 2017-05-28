@@ -197,16 +197,22 @@ public class MainFXMLController implements Initializable {
                             this.playerCreditHintLabel.setVisible(false);
                             this.communicationLabel.setVisible(false);
                             this.aiCreditHintLabel.setVisible(false);
+                            this.endTurn();
                             }));
         timeline.play();
         
         LOGGER.info( "Player has flopped cards!");
-        this.endTurn();
+        
     }
     
     @FXML
     private void betButtonAction(ActionEvent event){
-        if(this.gameMaster.getPlayerAllIn(1)){return;}
+        if(this.gameMaster.getPlayerAllIn(1)){
+        
+            LOGGER.info("player is in all in, so returns.");
+            return;
+        
+        }
         int betAmount;
         
         try{
@@ -214,13 +220,14 @@ public class MainFXMLController implements Initializable {
         }catch(NumberFormatException exception){
             LOGGER.error("Player has entered invalid number!", exception);
             
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                 this.communicationLabel.setVisible(true);
                                 this.communicationLabel.setText("You must enter numeric value!");
                                 }),
                                 new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false))
             );
-            timeline.play();
+            timeline1.play();
+            LOGGER.info("after timeline1.play called");
             return;
         }
         if(betAmount > this.gameMaster.getPlayerArray()[0].getCredit()){betAmount = this.gameMaster.getPlayerArray()[0].getCredit();}
@@ -229,7 +236,7 @@ public class MainFXMLController implements Initializable {
             if(this.gameMaster.getPlayerArray()[0].getCredit() < this.gameMaster.getMinBet()){
                 LOGGER.info( "Player has put all in!");
 
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                         this.communicationLabel.setVisible(true);
                                         this.playerCreditHintLabel.setText("-"+Integer.toString(this.gameMaster.getPlayerArray()[0].getCredit()));
                                         this.communicationLabel.setText("You have put all in!");
@@ -242,16 +249,19 @@ public class MainFXMLController implements Initializable {
                                             this.gameMaster.setPlayerAllIn(1, true);
                                             this.gameMaster.getPlayerArray()[0].incrementBet(this.gameMaster.getPlayerArray()[0].getCredit());
                                             this.gameMaster.getPlayerArray()[0].setCredit(0);
-
-                                            this.displayInterface();
-                                            this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster);
                                     }));                
-                timeline.play();
- 
+                timeline2.play();
+                timeline2.setOnFinished(e -> {
+                    LOGGER.info("all in, and timeline2 has ended.");
+                        this.displayInterface();
+                        this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster);
+                        LOGGER.info("ai turn ended");
+                });
                 
                 
                 if(gameMaster.getFlopped(2)){
-                    timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                    LOGGER.info("ai ha flopped!");
+                    Timeline timeline3 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.playerCreditHintLabel.setVisible(true);
                                             this.communicationLabel.setText("AI has flopped it's cards!");
@@ -269,13 +279,15 @@ public class MainFXMLController implements Initializable {
                                             this.playerCreditHintLabel.setVisible(false);
                                             this.communicationLabel.setVisible(false);
                                             this.aiCreditHintLabel.setVisible(false);
-                                            this.endTurn();
+                                            
                                             })                
                     );
-                    timeline.play();      
+                    timeline3.play();
+                    timeline3.setOnFinished(e -> this.endTurn());
+                    LOGGER.info("timeline3 ended");
                     return;
                 }
-                timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline4 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("AI holds your bet!");
                                             this.aiCreditHintLabel.setText("-"+Integer.toString(this.gameMaster.getMaxBet()-this.gameMaster.getPlayerArray()[1].getBet()));
@@ -287,15 +299,15 @@ public class MainFXMLController implements Initializable {
                                             this.displayInterface();
                                             })                
                     );
-                timeline.play();
+                timeline4.play();
                 
                 return;
             }
             LOGGER.info( "Player tries to bet below minimum amount!");
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
+            Timeline timeline5 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
                                              new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setText("The minimum bet is 200! Increase your bet!!!")),
                                              new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false)));
-            timeline.play();
+            timeline5.play();
             return;
         }
         
@@ -303,7 +315,7 @@ public class MainFXMLController implements Initializable {
             if( betAmount > this.gameMaster.getPlayerArray()[0].getCredit() ){
                 
                 LOGGER.info( "Player has put all in!");
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline6 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                         this.communicationLabel.setVisible(true);
                                         this.playerCreditHintLabel.setText("-"+Integer.toString(this.gameMaster.getPlayerArray()[0].getCredit()));
                                         this.communicationLabel.setText("You have put all in!");
@@ -318,14 +330,14 @@ public class MainFXMLController implements Initializable {
                                             this.gameMaster.getPlayerArray()[0].incrementBet(this.gameMaster.getPlayerArray()[0].getCredit());
                                             this.gameMaster.getPlayerArray()[0].setCredit(0);
                                             this.displayInterface();
-                                            this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster);
+                                            
                                     }));                
-                timeline.play();
-
+                timeline6.play();
+                timeline6.setOnFinished(e -> this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster));
                 
                 
                 if(gameMaster.getFlopped(2)){
-                    timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                    Timeline timeline7 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.playerCreditHintLabel.setVisible(true);
                                             this.communicationLabel.setText("AI has flopped it's cards!");
@@ -343,14 +355,18 @@ public class MainFXMLController implements Initializable {
                                             this.playerCreditHintLabel.setVisible(false);
                                             this.communicationLabel.setVisible(false);
                                             this.aiCreditHintLabel.setVisible(false);
-                                            this.endTurn();
+                                            
                                             })                
                     );
-                    timeline.play(); 
-                    LOGGER.info( "AI flopped cards!");
+                    timeline7.play(); 
+                    timeline7.setOnFinished(e -> {
+                        LOGGER.info( "AI flopped cards!");
+                        this.endTurn();
+                    });
+                    
                     
                 }
-                timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline8 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("AI holds your bet!");
                                             this.aiCreditHintLabel.setText("-"+Integer.toString(this.gameMaster.getMaxBet()-this.gameMaster.getPlayerArray()[1].getBet()));
@@ -362,14 +378,14 @@ public class MainFXMLController implements Initializable {
                                             this.displayInterface();
                                             })                
                     );
-                timeline.play();
+                timeline8.play();
                 
             }else{
                 String betString = Integer.toString(betAmount);
                 this.gameMaster.getPlayerArray()[0].incrementBet(betAmount);
                 this.gameMaster.setMaxBet(this.gameMaster.getPlayerArray()[0].getBet());
                 this.gameMaster.getPlayerArray()[0].decrementCredit(betAmount);
-                Timeline timeline = new Timeline(
+                Timeline timeline9 = new Timeline(
                                         new KeyFrame(Duration.seconds(0.0), e -> {
                                         this.communicationLabel.setVisible(true);
                                         this.playerCreditHintLabel.setVisible(true);
@@ -380,16 +396,14 @@ public class MainFXMLController implements Initializable {
                                         this.communicationLabel.setVisible(false);
                                         this.playerCreditHintLabel.setVisible(false);
                                         this.displayInterface();
+                                        
                                         })
                 );
-                timeline.play();
-                
+                timeline9.play();
+                timeline9.setOnFinished(e -> this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster));
 
-                
-                this.gameMaster.getAI().aiTurn(this.gameMaster.getPlayerArray()[1], this.gameMaster.getDealer(), gameMaster);
-                
                 if(gameMaster.getFlopped(2)){
-                    Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                    Timeline timeline10 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.playerCreditHintLabel.setVisible(true);
                                             this.communicationLabel.setText("AI has flopped it's cards!");
@@ -406,15 +420,18 @@ public class MainFXMLController implements Initializable {
                                             this.playerCreditHintLabel.setVisible(false);
                                             this.communicationLabel.setVisible(false);
                                             this.aiCreditHintLabel.setVisible(false);
-                                            this.endTurn();
+                                            
                                             })                
                     );
-                    timeline2.play(); 
-                    LOGGER.info( "AI flopped cards!");
-                    
+                    timeline10.play(); 
+                    timeline10.setOnFinished(e -> {
+                        LOGGER.info( "AI flopped cards!");
+                        this.endTurn();
+                        
+                    });
                     return;
                 }
-                Timeline timeline3 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline11 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("AI holds your bet!");
                                             }),
@@ -424,7 +441,7 @@ public class MainFXMLController implements Initializable {
                                             this.displayInterface();
                                             })                
                     );
-                timeline3.play();
+                timeline11.play();
                 
             }
         }
@@ -433,17 +450,17 @@ public class MainFXMLController implements Initializable {
     @FXML
     private void checkButtonAction(ActionEvent event){
         if(this.gameMaster.getPlayerArray()[0].getBet() == 0 || this.gameMaster.getPlayerArray()[0].getBet() < this.gameMaster.getMinBet()){
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
+            Timeline timeline12 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
                                              new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setText("You can not check without any bet!")),
                                              new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false)));
-            timeline.play();
+            timeline12.play();
             
             return;
         }
         
         if(this.gameMaster.getPlayerArray()[0].getBet() == this.gameMaster.getPlayerArray()[1].getBet()){
             LOGGER.info( "Player has checked!");
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+            Timeline timeline13 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                 this.communicationLabel.setVisible(true);
                                 this.communicationLabel.setText("You have checked!!");
             }),
@@ -453,29 +470,30 @@ public class MainFXMLController implements Initializable {
                         
                     })
             );
-            timeline.play();
+            timeline13.play();
             return;
             
         } 
         if(this.gameMaster.getPlayerArray()[0].getBet() < this.gameMaster.getPlayerArray()[1].getBet()){
             if(this.gameMaster.getPlayerAllIn(1)){
                 LOGGER.info( "Player has checked!");
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+            Timeline timeline14 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                 this.communicationLabel.setVisible(true);
                                 this.communicationLabel.setText("You have checked!!");
             }),
                     new KeyFrame(Duration.seconds(3.0), e -> {
                         this.communicationLabel.setVisible(false);
-                        this.endTurn();
+                        
                     })
             );
-            timeline.play();
+            timeline14.play();
+            timeline14.setOnFinished(e -> this.endTurn());
             return;
             }
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
+            Timeline timeline15 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setVisible(true)),
                                              new KeyFrame(Duration.seconds(0.0), e -> this.communicationLabel.setText("You can not check without any bet!")),
                                              new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false)));
-            timeline.play();
+            timeline15.play();
         } 
    
     }
@@ -587,7 +605,7 @@ public class MainFXMLController implements Initializable {
                     return;
                 }
                 if(this.gameMaster.getPlayerArray()[0].getBet() < this.gameMaster.getMaxBet()){
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                    Timeline timeline16 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                                                                 this.communicationLabel.setVisible(true);
                                                                                 this.playerCreditHintLabel.setVisible(true);
                                                                                 this.communicationLabel.setText("You won this turn!");
@@ -604,18 +622,23 @@ public class MainFXMLController implements Initializable {
                                                                                 this.communicationLabel.setVisible(false);
                                                                                 this.playerCreditHintLabel.setVisible(false);
                                                                                 
-                                                                                this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()*2);
-                                                                                this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getMaxBet() - this.gameMaster.getPlayerArray()[0].getBet());
-                                                                                this.gameMaster.insertData(1, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet()*2);
-                                                                                this.newTurn();
+                                                                                
+                                                                                
                                                                          })
                             ); 
-                    timeline.play();
-
+                    timeline16.play();
+                    timeline16.setOnFinished(e -> {
+                        this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()*2);
+                        this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getMaxBet() - this.gameMaster.getPlayerArray()[0].getBet());
+                        this.gameMaster.insertData(1, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet()*2);
+                        
+                        this.newTurn();
+                    
+                    });
                     
                     return;
                 }else{
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline17 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                     this.communicationLabel.setVisible(true);
                                     this.playerCreditHintLabel.setVisible(true);
                                     this.communicationLabel.setText("You won this turn!");
@@ -632,12 +655,15 @@ public class MainFXMLController implements Initializable {
                                     this.communicationLabel.setVisible(false);
                                     this.playerCreditHintLabel.setVisible(false); 
                                     
-                                    this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()+ this.gameMaster.getPlayerArray()[1].getBet());
-                                    this.gameMaster.insertData(1, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
-                                    this.newTurn();
+                                    
                                     })
                             ); 
-                    timeline.play();
+                    timeline17.play();
+                    timeline17.setOnFinished(e -> {
+                        this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()+ this.gameMaster.getPlayerArray()[1].getBet());
+                        this.gameMaster.insertData(1, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
+                        this.newTurn();
+                    });
 
                     return;
                 }
@@ -649,14 +675,12 @@ public class MainFXMLController implements Initializable {
                     return;
                 }
                 if(this.gameMaster.getPlayerArray()[1].getBet() < this.gameMaster.getMaxBet()){
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                    Timeline timeline18 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                                                     this.communicationLabel.setVisible(true);
                                                                     this.aiCreditHintLabel.setVisible(true);
                                                                     this.communicationLabel.setText("You have lost this turn!");
                                                                     this.aiCreditHintLabel.setText("+"+ Integer.toString(this.gameMaster.getPlayerArray()[1].getBet()*2));
-                                                                    this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[1].getBet()*2);
-                                                                    this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getMaxBet() - this.gameMaster.getPlayerArray()[1].getBet());
-                                                                    this.gameMaster.insertData(0, calculatedHandString, this.gameMaster.getPlayerArray()[1].getBet()*2);
+                                                                    
                                                                     
                                                                     this.searchCardPictures(this.gameMaster.getPlayerArray()[1].getHand(), 2);
                                                                     this.aiCard1Label.setText(this.gameMaster.getPlayerArray()[1].getHand()[0]);
@@ -668,20 +692,25 @@ public class MainFXMLController implements Initializable {
                                                 new KeyFrame(Duration.seconds(6.0), e-> {
                                                                     this.communicationLabel.setVisible(false);
                                                                     this.aiCreditHintLabel.setVisible(false);
-                                                                    this.newTurn();
+                                                                    
                                                              })
                 );
-                    timeline.play();
+                    timeline18.play();
+                    timeline18.setOnFinished(e -> {
+                        this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[1].getBet()*2);
+                        this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getMaxBet() - this.gameMaster.getPlayerArray()[1].getBet());
+                        this.gameMaster.insertData(0, calculatedHandString, this.gameMaster.getPlayerArray()[1].getBet()*2);
+                        this.newTurn();
+                    });
                     
                     return;
                 }else{
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                    Timeline timeline19 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                                                     this.communicationLabel.setVisible(true);
                                                                     this.aiCreditHintLabel.setVisible(true);
                                                                     this.communicationLabel.setText("You have lost this turn!");
                                                                     this.aiCreditHintLabel.setText("+"+ Integer.toString(this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet()));
-                                                                    this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()+ this.gameMaster.getPlayerArray()[1].getBet());
-                                                                    this.gameMaster.insertData(0, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
+                                                                    
                                                                     
                                                                     this.searchCardPictures(this.gameMaster.getPlayerArray()[1].getHand(), 2);
                                                                     this.aiCard1Label.setText(this.gameMaster.getPlayerArray()[1].getHand()[0]);
@@ -693,24 +722,26 @@ public class MainFXMLController implements Initializable {
                                                 new KeyFrame(Duration.seconds(6.0), e-> {
                                                                     this.communicationLabel.setVisible(false);
                                                                     this.aiCreditHintLabel.setVisible(false);
-                                                                    this.newTurn();
+                                                                    
                                                              })
                 );
-                    timeline.play();
+                    timeline19.play();
+                    timeline19.setOnFinished(e -> {
+                        this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet()+ this.gameMaster.getPlayerArray()[1].getBet());
+                        this.gameMaster.insertData(0, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet() + this.gameMaster.getPlayerArray()[1].getBet());
+                        this.newTurn();
+                    });
                     
                     return;
                 }
             case 3:
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+                Timeline timeline20 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                     this.communicationLabel.setVisible(true);
                                     this.aiCreditHintLabel.setVisible(true);
                                     this.playerCreditHintLabel.setVisible(true);
                                     this.communicationLabel.setText("It's a draw!");
                                     this.playerCreditHintLabel.setText("+"+ Integer.toString(this.gameMaster.getPlayerArray()[0].getBet()));
-                                    this.aiCreditHintLabel.setText("+"+ Integer.toString(this.gameMaster.getPlayerArray()[1].getBet()));
-                                    this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet());
-                                    this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[1].getBet());
-                                    this.gameMaster.insertData(2, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet());
+                                    this.aiCreditHintLabel.setText("+"+ Integer.toString(this.gameMaster.getPlayerArray()[1].getBet()));                                   
                                                                     
                                     this.searchCardPictures(this.gameMaster.getPlayerArray()[1].getHand(), 2);
                                     this.aiCard1Label.setText(this.gameMaster.getPlayerArray()[1].getHand()[0]);
@@ -723,11 +754,16 @@ public class MainFXMLController implements Initializable {
                                     this.communicationLabel.setVisible(false);
                                     this.aiCreditHintLabel.setVisible(false);
                                     this.playerCreditHintLabel.setVisible(true);
-                                    this.newTurn();
+                                    
                                                 })
                 );
-                timeline.play();
-                
+                timeline20.play();
+                timeline20.setOnFinished(e ->{
+                    this.gameMaster.getPlayerArray()[0].incrementCredit(this.gameMaster.getPlayerArray()[0].getBet());
+                    this.gameMaster.getPlayerArray()[1].incrementCredit(this.gameMaster.getPlayerArray()[1].getBet());
+                    this.gameMaster.insertData(2, calculatedHandString, this.gameMaster.getPlayerArray()[0].getBet());
+                    this.newTurn();
+                });
         }
     }
     /**
@@ -780,13 +816,13 @@ public class MainFXMLController implements Initializable {
         this.playerCard4.setDisable(false);
         this.playerCard5.setDisable(false);
         
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
+        Timeline timeline21 = new Timeline(new KeyFrame(Duration.seconds(0.0), e -> {
                                             this.communicationLabel.setVisible(true);
                                             this.communicationLabel.setText("Please make your bet!");
                                                     }),
                                         new KeyFrame(Duration.seconds(3.0), e -> this.communicationLabel.setVisible(false))
         );
-        timeline.play();
+        timeline21.play();
     }
     /**
      * In case of defeat, shows the victory pop up window.
